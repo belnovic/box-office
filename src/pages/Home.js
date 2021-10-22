@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
+import ActorGrid from '../components/actor/ActorGrid';
 import MainPageLayout from '../components/MainPageLayout'
+import ShowGrid from '../components/show/ShowGrid';
 import { apiGet } from '../misc/config';
 
 const Home = () => {
@@ -44,12 +46,12 @@ const Home = () => {
         // something was entered - find matching values
         if (results && results.length > 0) {
             // if shows was the button selected, then map the results to shows
-            return results[0].show ? results.map( (item) => (
-                <div key={item.show.id}>{item.show.name}</div> 
+            return results[0].show ? ( 
+                <ShowGrid data={results}/>
             // otherwise map the results to actors
-            )) : results.map( (item) => (
-                <div key={item.person.id}>{item.person.name}</div> 
-            ))
+            ) : (
+                <ActorGrid data={results}/>
+            );
 
         }
         // default
