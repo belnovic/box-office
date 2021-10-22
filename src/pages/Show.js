@@ -1,13 +1,31 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useReducer} from 'react'
 import { useParams } from 'react-router'
 import { apiGet } from '../misc/config';
+
+const reducer = (prevState, action) => {
+    switch(action.type) {
+        // when fetch is a success, update isloading to true and show to fetched show
+        case 'FETCH_SUCCESS': {
+            return {isLoading: false, error: null, show: action.show}
+        }
+        case 'FETCH_FAILED': {
+            return {...prevState, isLoading: false, error: action.error}
+        }
+        default: return prevState
+    }
+}
+
+const initialState = {
+    show: null,
+    isLoading: true,
+    error: null
+}
 
 const Show = () => {
 
     const { id } = useParams();
-    const [show, setShow] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     // useEffect runs callback function whenever something inside array changes
     // whenever show id changes, retrieve a new show with new id
@@ -18,14 +36,12 @@ const Show = () => {
         apiGet(`/shows/${id}?embed[]=seasons&embed[]=cast`).then(results => {
             setTimeout(() => {
                 if (isMounted){
-                    setShow(results);
-                    setIsLoading(false)
+                    dispatch({type: 'FETCH_SUCCESS', show: results})
                 }
             }, 2000);
         }).catch(err => {
             if (isMounted) {
-                setError(err.message);
-                setIsLoading(false);
+                dispatch({type: 'FETCH_FAILED', error: err.message})
             }
         });
 
@@ -35,15 +51,7 @@ const Show = () => {
         }
     }, [id]);
 
-    console.log(show);
-
-    if (isLoading) {
-        return <div>Data is being loaded</div>
-    }
-
-    if (error) {
-        return <div>Error occurred</div>
-    }
+    console.log(state);
 
     return (
         <div>
