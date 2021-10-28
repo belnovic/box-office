@@ -1,6 +1,3 @@
-/* eslint-disable no-prototype-builtins */
-/* eslint-disable no-continue */
-/* eslint-disable no-restricted-syntax */
 import { useReducer, useEffect, useState, useRef, useCallback } from 'react';
 import { apiGet } from './config';
 
@@ -18,7 +15,6 @@ function showsReducer(prevState, action) {
       return prevState;
   }
 }
-
 
 function usePersistedReducer(reducer, initialState, key) {
   const [state, dispatch] = useReducer(reducer, initialState, initial => {
@@ -38,7 +34,6 @@ export function useShows(key = 'shows') {
   return usePersistedReducer(showsReducer, [], key);
 }
 
-// data persistence - keeps search text when user refreshes page
 export function useLastQuery(key = 'lastQuery') {
   const [input, setInput] = useState(() => {
     const persisted = sessionStorage.getItem(key);
@@ -72,21 +67,12 @@ const reducer = (prevState, action) => {
   }
 };
 
-// extracts useReducer and useEffect to become reusable in other components
 export function useShow(showId) {
-  // const [state, dispatch] = useReducer(reducer, {
-  //   show: null,
-  //   isLoading: true,
-  //   error: null,
-  // });
-  const [state, dispatch] = useReducer(
-    reducer,
-    {
-      show: null,
-      isLoading: true,
-      error: null
-    }
-  )
+  const [state, dispatch] = useReducer(reducer, {
+    show: null,
+    isLoading: true,
+    error: null,
+  });
 
   useEffect(() => {
     let isMounted = true;
@@ -109,7 +95,6 @@ export function useShow(showId) {
   }, [showId]);
 
   return state;
-
 }
 
 export function useWhyDidYouUpdate(name, props) {

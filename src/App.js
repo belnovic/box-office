@@ -1,6 +1,7 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+
 import Home from './pages/Home';
 import Starred from './pages/Starred';
 import Show from './pages/Show';
@@ -29,7 +30,6 @@ function App() {
           <Show />
         </Route>
 
-        {/* default error page */}
         <Route>
           <div>Not found</div>
         </Route>
